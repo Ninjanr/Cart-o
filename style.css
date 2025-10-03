@@ -1,0 +1,472 @@
+:root {
+    --bg-color: #0b0b1b;
+    --envelope-body-color: #c7aa8b;
+    --envelope-flap-color: #b99d7e;
+    --letter-paper-color: #f3e9d8;
+    --font-main: 'Roboto', 'Segoe UI', sans-serif;
+    --font-cursive: 'Dancing Script', cursive;
+    --font-elegant: 'Cormorant Garamond', serif;
+    --border-radius-envelope: 4px;
+    --flap-height-ratio: 0.55;
+    --envelope-width: 20rem;
+    --envelope-height: calc(var(--envelope-width) * 0.675);
+    /* --- AJUSTE NA ALTURA DA LINHA --- */
+    --line-height-letter: 24px;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* alinha pelo topo em vez do centro */
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--bg-color);
+    font-family: var(--font-main);
+    overflow: hidden;
+    padding-top: 270px; /* <-- ajusta quanto para baixo você quer */
+}
+
+
+#tsparticles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* --- CÓDIGO NOVO ADICIONADO --- */
+.floating-image-container {
+    position: absolute;
+    top: calc(32% - 180px); /* Ajusta a altura acima do envelope */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none; /* Para não interferir no clique do envelope */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.floating-image {
+    width: 200px;
+    height: auto;
+    /* Aplica as duas animações */
+    animation: breathe 4s ease-in-out infinite alternate, glow 5s linear infinite;
+}
+
+.envelope-container {
+    position: relative;
+    margin-top: 60px; /* empurra o envelope um pouco para baixo */
+    width: var(--envelope-width, 80vw);
+    height: var(--envelope-height, 54vw);
+    max-width: 320px;
+    max-height: 216px;
+    cursor: pointer;
+    border-radius: var(--border-radius-envelope);
+    perspective: 1000px;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.envelope-container:hover {
+    transform: translateY(-10px);
+}
+
+.letter {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 92%;
+    height: 92%;
+    background-color: var(--letter-paper-color);
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid #dcd0b9;
+    box-sizing: border-box;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    /* --- AJUSTES NO PADDING PARA ALINHAMENTO E RESPIRO --- */
+    padding: 8px 25px 12px;
+    will-change: transform;
+    transition: transform 0.7s 0s ease-in-out, z-index 0s 0.7s;
+    border-radius: 2px;
+    background-image: linear-gradient(to top, rgba(0,0,0,0.05) 1px, transparent 1px),
+                      repeating-linear-gradient(to bottom, transparent 0,
+                      transparent calc(var(--line-height-letter) - 1px),
+                      rgba(180, 160, 130, 0.3) var(--line-height-letter));
+    background-size: 100% var(--line-height-letter);
+    font-family: var(--font-elegant);
+    color: #4a3b2e;
+}
+
+.letter h3 {
+    font-family: var(--font-cursive);
+    font-size: clamp(22px, 1.4em, 28px);
+    /* --- AJUSTE NA MARGEM PARA SINCRONIZAR COM A LINHA --- */
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+    text-align: center;
+    color: #5a4a3a;
+}
+
+.letter p {
+    font-size: clamp(14px, 0.9em, 16px);
+    margin: 0;
+    line-height: var(--line-height-letter);
+    font-weight: 400;
+}
+
+.envelope-back {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--envelope-body-color);
+    z-index: 2;
+    border-radius: var(--border-radius-envelope);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3),
+                inset 0 0 20px rgba(0,0,0,0.15),
+                inset 0 0 0 1px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.envelope-back > div {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 55%;
+    background-color: #d3b99e;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    border-top: 1px solid rgba(0,0,0,0.07);
+    z-index: 1;
+    box-shadow: inset 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(var(--envelope-height) * var(--flap-height-ratio));
+    background: linear-gradient(to bottom, #e0c8a8 0%, var(--envelope-flap-color) 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    z-index: 3;
+    will-change: transform;
+    transition: transform 0.7s 0.7s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    border-top-left-radius: var(--border-radius-envelope);
+    border-top-right-radius: var(--border-radius-envelope);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    box-shadow: inset 0 8px 15px rgba(0,0,0,0.2),
+                inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+.flap::before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, transparent 10%, rgba(0,0,0,0.3) 25%, rgba(0,0,0,0.3) 75%, transparent 90%);
+    z-index: 4;
+}
+
+.top-stamp {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4rem;
+    max-width: 60px;
+    opacity: 0.7;
+    z-index: 5;
+    pointer-events: none;
+    transition: opacity 0.3s 0.7s ease;
+}
+
+.seal {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 3.5rem;
+    height: 3.5rem;
+    max-width: 65px;
+    max-height: 65px;
+    z-index: 4;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.5));
+}
+
+.envelope-container.open .flap {
+    transition-delay: 0s;
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+
+.envelope-container.open .letter {
+    z-index: 5;
+    transition-delay: 0.5s;
+    transform: translateY(calc(-75% - 10px));
+}
+
+.envelope-container.open .seal {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+}
+
+.envelope-container.open .top-stamp {
+    opacity: 0;
+    transition-delay: 0s;
+}
+
+@media (min-width: 450px) {
+    .envelope-container.open .letter {
+        transform: translateY(calc(-100px - 10px));
+    }
+}
+
+.secret-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 202;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 0.5s ease;
+    transform: scale(1);
+    backdrop-filter: blur(3px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.secret-button:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+.hallows-icon {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hallows-icon .triangle {
+    width: 0;
+    height: 0;
+    border-left: 12.5px solid transparent;
+    border-right: 12.5px solid transparent;
+    border-bottom: 22px solid white;
+}
+
+.hallows-icon .circle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 2px solid white;
+    border-radius: 50%;
+    top: 5px;
+}
+
+.hallows-icon .line {
+    position: absolute;
+    width: 2px;
+    height: 25px;
+    background-color: white;
+}
+
+.secret-button .tooltip-text {
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.secret-button .tooltip-text::before {
+    content: 'Revelar';
+}
+
+body.magic-mode-active .secret-button .tooltip-text::before {
+    content: 'Ocultar';
+}
+
+.secret-button:hover .tooltip-text {
+    opacity: 1;
+    visibility: visible;
+}
+
+#fireworksCanvas {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+    pointer-events: none;
+}
+
+body.magic-mode-active #fireworksCanvas {
+    display: block;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 199;
+    pointer-events: none;
+    transition: background-color 0.5s ease;
+}
+
+body.magic-mode-active::before {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+body.magic-mode-active .envelope-container {
+    opacity: 0;
+    transform: scale(0.7);
+    pointer-events: none;
+}
+
+/* --- CÓDIGO NOVO ADICIONADO --- */
+body.magic-mode-active .floating-image-container {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.7);
+}
+
+body.magic-mode-active .secret-button {
+    opacity: 1;
+    animation: continuous-glow 2s infinite ease-in-out;
+}
+
+/* --- ANIMAÇÕES ADICIONADAS --- */
+@keyframes breathe {
+    from {
+        transform: scale(1) translateY(0);
+    }
+    to {
+        transform: scale(1.1) translateY(-15px);
+    }
+}
+
+@keyframes glow {
+    0%, 90% {
+        /* O brilho fica desligado na maior parte do tempo */
+        filter: drop-shadow(0 0 5px rgba(255, 223, 0, 0));
+    }
+    92% {
+        /* Acende rapidamente */
+        filter: drop-shadow(0 0 25px rgba(255, 223, 0, 1))
+                drop-shadow(0 0 10px rgba(255, 223, 0, 0.8));
+    }
+    94%, 100% {
+        /* E apaga */
+        filter: drop-shadow(0 0 5px rgba(255, 223, 0, 0));
+    }
+}
+
+@keyframes continuous-glow {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(137, 207, 240, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(137, 207, 240, 1);
+    }
+}
+
+.secret-image-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 201;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.secret-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scale(0.8);
+    transition: transform 0.4s ease;
+}
+
+.secret-image {
+    width: 90%;
+    max-width: 180px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.birthday-message {
+    background-color: transparent;
+    color: #fff;
+    text-align: left;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    font-family: var(--font-cursive);
+    font-size: clamp(1.1rem, 4vw, 1.7rem);
+    line-height: 1.6;
+}
+body.magic-mode-active .secret-image-container {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+body.magic-mode-active .secret-content {
+    transform: scale(1);
+}
+
+#musicOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 9999;
+    background: transparent;
+}

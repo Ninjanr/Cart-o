@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta Mágica Interativa</title>
+    <link rel="icon" type="image/png" href="brasao.webp">
+    <meta name="theme-color" content="#123456" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Cormorant+Garamond:wght@400;600&family=Roboto:wght@400&display=swap" 
+        rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div id="tsparticles"></div>
+    <canvas id="fireworksCanvas"></canvas>
+    <div id="musicOverlay"></div> 
+    <audio id="musicaFundo" src="hogwa.mp3" loop></audio>
+    <div class="floating-image-container">
+        <img src="seletor.png" alt="Pomo de Ouro Flutuante" class="floating-image">
+    </div>
+    <div class="envelope-container" id="envelope">
+        <div class="letter">
+            <h3>Feliz Aniversário, Beatrice!</h3>
+            <p>
+                Que seu dia seja tão incrível quanto uma vitória em Hogwarts.<br>
+                Que você continue sendo essa pessoa cheia de energia e alegria, sempre iluminando quem está por perto como um feitiço 
+                <i>Lumos🕯️</i>.
+            </p>
+        </div>
+        <div class="envelope-back"><div></div></div>
+        <div class="flap"></div>
+        <img src="hogs.png" alt="Carimbo de Hogwarts" class="top-stamp">
+        <img src="carimbo.png" alt="Selo de Cera de Hogwarts" class="seal">
+    </div>
+    <a href="#" id="secret-button" class="secret-button" aria-label="Botão Secreto">
+        <div class="hallows-icon">
+            <span class="triangle"></span>
+            <span class="circle"></span>
+            <span class="line"></span>
+        </div>
+        <span class="tooltip-text"></span>
+    </a>
+    <div id="image-container" class="secret-image-container">
+        <div class="secret-content">
+            <img class="secret-image" src="cake.gif" alt="Castelo Mágico">
+            <p class="birthday-message">Parabéns, Bia!<br>Bem-vinda aos 18.<br> A primeira grande responsabilidade?<br> Tentar não ser presa kkkk <br>Feliz aniversário!🎉</p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.12.0/tsparticles.slim.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
